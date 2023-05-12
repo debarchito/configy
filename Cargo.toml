@@ -1,0 +1,9 @@
+[package]
+name = "configy"
+version = "0.1.0"
+description = "A simple (zero-dependency) file and folder syncing (local) utility"
+authors = ["Debarchito Nath <dev.debarchito.nath@protonmail.com>"]
+edition = "2021"
+repository = "https://github.com/debarchito/configy"
+license = "MIT"
+readme = "README.md"
