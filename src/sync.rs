@@ -2,73 +2,126 @@
 
 use std::{
     env::current_dir,
-    fs::metadata,
+    fs::{remove_dir_all, remove_file},
     path::{Path, PathBuf},
 };
 mod parse;
-use crate::colors;
+use crate::colors::{BLUE_FG, GREEN_FG, RED_FG, RESET, WHITE_FG};
+use std::process::exit;
 
 /// Initialize sync
-pub fn init() {
+pub fn init(force: bool) {
     let entries = parse::get_entries();
 
     for entry in entries {
         // 2 entries being valid is guaranteed
-        let (src, dest) = (Path::new(&entry.0), Path::new(&entry.1));
+        for value in entry.1 {
+            let (src, dest) = (Path::new(&entry.0), Path::new(&value));
 
-        if !src.exists() {
-            eprintln!(
-                "{}[!] The following path doesn't exist: {}{}{}",
-                colors::RED_FG,
-                colors::WHITE_FG,
-                entry.0,
-                colors::RESET
-            );
-            continue;
+            if !src.exists() {
+                eprintln!(
+                    "{}[?] The following path doesn't exist: {}{}{}",
+                    BLUE_FG, WHITE_FG, entry.0, RESET,
+                );
+                continue;
+            }
+
+            symlink(src, dest, force);
         }
-
-        symlink(src, dest);
     }
 }
 
-fn symlink(src: &Path, dest: &Path) {
+/// Symlink the src and dest
+fn symlink(src: &Path, dest: &Path, force: bool) {
     #[cfg(unix)]
     {
-        // TODO: Handle errors properly
-        std::os::unix::fs::symlink(src, dest).unwrap();
+        if try_clean(&dest, force) { return; }
+
+        std::os::unix::fs::symlink(&src, &dest).unwrap_or_else(|err| {
+            eprintln!(
+                "{}[!] Failed to create symbolic link: {:?} <==> {:?}\n==> {}{}",
+                RED_FG, src, dest, err, RESET
+            );
+            exit(1);
+        });
     }
 
     #[cfg(windows)]
     {
-        // TODO: Handle possible errors correctly
-        let src_md = metadata(src).unwrap();
-        let cur_dir = current_dir().unwrap();
+        use std::os::windows::fs::{symlink_dir, symlink_file};
+
+        let cur_dir = current_dir().unwrap_or_else(|err| {
+            eprintln!(
+                "{}[!] Failed while trying to find the current folder\n==> {}{}",
+                RED_FG, err, RESET
+            );
+            exit(1);
+        });
         let src = if src.is_relative() {
-            cur_dir.join(src).canonicalize().unwrap()
+            cur_dir.join(src)
         } else {
             PathBuf::from(src)
         };
         let dest = if dest.is_relative() {
-            cur_dir.join(dest).canonicalize().unwrap()
+            cur_dir.join(dest)
         } else {
             PathBuf::from(dest)
         };
 
-        // TODO: Handle possible errors correctly
-        match src_md.is_file() {
-            true => std::os::windows::fs::symlink_file(src, dest).unwrap(),
-            _ => std::os::windows::fs::symlink_dir(src, dest).unwrap(),
+        if try_clean(&dest, force) { return; }
+
+        match src.is_file() {
+            true => symlink_file(&src, &dest).unwrap_or_else(|err| {
+                eprintln!(
+                    "{}[!] Failed to create symbolic link: {:?} <==> {:?}\n==> {}{}",
+                    RED_FG, src, dest, err, RESET
+                );
+                exit(1);
+            }),
+            _ => symlink_dir(&src, &dest).unwrap_or_else(|err| {
+                eprintln!(
+                    "{}[!] Failed to create symbolic link: {:?} <==> {:?}\n==> {}{}",
+                    RED_FG, src, dest, err, RESET
+                );
+                exit(1);
+            }),
         }
     }
 
-    // WARNING: Re-trying to link already linked files/folders WILL cause a panic!
-    // TODO: Solve it
-
     println!(
-        "{}[+] Symbolic link creation successfully: {:?} <-> {:?}{}",
-        colors::GREEN_FG,
-        src,
-        dest,
-        colors::RESET
+        "{}[+] Created symbolic link successfully: {:?} <==> {:?}{}",
+        GREEN_FG, src, dest, RESET,
     );
+}
+
+/// Cleans the destination path by removing the file or directory if it exists.
+fn try_clean(dest: &PathBuf, force: bool) -> bool {
+    if dest.exists() {
+        if force {
+            match dest.is_file() {
+                true => remove_file(&dest).unwrap_or_else(|err| {
+                    eprintln!(
+                        "{}[!] Failed to remove file: {}{:?}\n{}==> {}{}",
+                        RED_FG, WHITE_FG, dest, RED_FG, err, RESET
+                    );
+                    exit(1);
+                }),
+                _ => remove_dir_all(&dest).unwrap_or_else(|err| {
+                    eprintln!(
+                        "{}[!] Failed to remove folder: {}{:?}\n{}==> {}{}",
+                        RED_FG, WHITE_FG, dest, RED_FG, err, RESET
+                    );
+                    exit(1);
+                }),
+            };
+            return false;
+        } else {
+            eprintln!(
+                "{}[?] The following path already exists: {}{:?}\n{}==> Use \"forcesync\" instead of \"sync\" to overwrite{}",
+                BLUE_FG, WHITE_FG, dest, BLUE_FG, RESET
+            );
+            return true;
+        }
+    }
+    false
 }

@@ -12,17 +12,25 @@ cargo build
 1. Create a `.configy` file in the root of your project.
 2. The syntax is very simple. Here is all you need to know ->
 ```bash
-relative/folder => ../realtive2/folder2
-relative/file.rs => ../relative2/file2.rs
-# This is a comment and is ignored. Empty lines are also going to be ignored
-/absolute/file/path/file.rs => ../relative3/file3.rs
-# To note, on top "relative" is calculated from the folder where the executable is launched
-# Mixture of relative and absolute is allowed. Glob support doesn't exist yet
-# Relative paths are all converted to absolute cause symlinks in Windows don't support relative paths
-# The parser is VERY simple. No syntax errors, stuff that don't line up are just ignored. for e.g.
-=> 56
-1 =>
-/djdjd => ../eieie => ...
+# NOTE: The folder in which the configy executable was executed is
+# considered as the root for relative file resolution
+# The following examples are parsed correctly:
+../relative/path/to/file.rs => ../relative2/path2/to2/file.rs
+/absolute/path/to/folder => ../relative/path/to/folder
+/absolute/path/to/folder => /absolute2/path2/to2/folder
+../relative/path/to/file.rs => /absolute/path/to/file.rs
+# The following examples are not parsed and ignored:
+# Comments are ignored as well as empty lines
+
+=> /some/path
+/some/path =>
 # Only one "=>" is allowed per line
+/some/path => ../some2/path2 => ../other
+# Comments MUST start from the beginning of a line
+/some/path => /some2/path2 # This is not invalid
+# Here, the comment part is going to treated as part of the 2nd link
+# Instead, comments should be placed on top of the links, like this:
+# This is valid
+/some/path => /some2/path2
 ```
-3. After you have added all you desired links in `.configy`, just run `configy sync` and you are done! Currently, on Windows, re-trying to link already linkeds files and folders cause a panic, but this will be fixed in future commits cause all the code so far have been an evening's work. It currently works for the sake of working. The code quality is questionable but everything will improve. Also, configy needs to run in admin mode in windows to use symlinks cause that's how windows does it.
+3. After you have added all you desired links in `.configy`, just run `configy sync` and you are done! If the destination already exists, it will not overwrite it and issue info to console. If you want to overwrite, use `config forcesync` (or `fsync`).

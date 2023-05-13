@@ -15,8 +15,9 @@ fn main() {
     // args.len() being >= 2 is guaranteed, so direct access is safe
     match args[1].as_str() {
         "help" | "h" => help(),
-        "version" | "v" => println!("configy {VERSION}"),
-        "sync" | "s" => sync::init(),
+        "version" | "v" => println!("configy {}", VERSION),
+        "sync" | "s" => sync::init(false),
+        "forcesync" | "fsync" | "fs" => sync::init(true),
         sub_cmd @ _ => eprintln!(
             "{}[!] Not a valid subcommand: {}{}{}",
             colors::RED_FG,
@@ -27,7 +28,7 @@ fn main() {
     }
 }
 
-/// The help message
+/// Prints the help message with usage instructions and available subcommands.
 fn help() {
     println!(
         "configy {VERSION}
@@ -38,8 +39,9 @@ USAGE:
     configy [SUBCOMMAND]
 
 SUBCOMMANDS:
-    help           Print this message
-    version        Version info
-    sync           Read from config and sync"
+    help, h                 Print this message
+    version, v              Version info
+    sync, s                 Read from \".configy\" and sync
+    forcesync, fsync, fs    Read from \".configy\" and force sync it (overwrite allowed)"
     );
 }
