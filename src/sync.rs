@@ -35,7 +35,7 @@ pub fn init(force: bool) {
 fn symlink(src: &Path, dest: &Path, force: bool) {
     #[cfg(unix)]
     {
-        if try_clean(&dest, force) { return; }
+        if try_clean(&PathBuf::from(dest), force) { return; }
 
         std::os::unix::fs::symlink(&src, &dest).unwrap_or_else(|err| {
             eprintln!(
