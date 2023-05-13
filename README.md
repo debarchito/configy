@@ -27,7 +27,7 @@ cargo build
 # Only one "=>" is allowed per line
 /some/path => ../some2/path2 => ../other
 # Comments MUST start from the beginning of a line
-/some/path => /some2/path2 # This is not invalid
+/some/path => /some2/path2 # This is invalid
 # Here, the comment part is going to treated as part of the 2nd link
 # Instead, comments should be placed on top of the links, like this:
 # This is valid
