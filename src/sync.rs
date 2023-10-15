@@ -103,8 +103,8 @@ fn clean(dest: &PathBuf, force: bool) -> bool {
     if !force {
         eprintln!(
             "{}[?] The following path already exists: {}{:?}\n{}==> Use \"forcesync\" instead of \"sync\" to overwrite{}",
-                BLUE_FG, WHITE_FG, dest, BLUE_FG, RESET
-            );
+            BLUE_FG, WHITE_FG, dest, BLUE_FG, RESET
+        );
         return true;
     }
 
