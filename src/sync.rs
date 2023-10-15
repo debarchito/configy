@@ -57,15 +57,13 @@ fn symlink(src: &Path, dest: &Path, force: bool) {
             exit(1);
         });
         // Make sure relative paths are parsed correctly on Windows.
-        let src = if src.is_relative() {
-            cur_dir.join(src)
-        } else {
-            PathBuf::from(src)
+        let src = match src.is_relative() {
+            true => cur_dir.join(src),
+            _ => PathBuf::from(src),
         };
-        let dest = if dest.is_relative() {
-            cur_dir.join(dest)
-        } else {
-            PathBuf::from(dest)
+        let dest = match dest.is_relative() {
+            true => cur_dir.join(dest),
+            _ => PathBuf::from(dest),
         };
 
         if clean(&dest, force) {
