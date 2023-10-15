@@ -1,1 +1,9 @@
-/target
+# Base ignore
+**/.DS_Store
+**/.config/
+**/.vscode/
+**/.idea/
+**/.helix/ 
+
+# Project
+target/

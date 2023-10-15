@@ -12,13 +12,13 @@ fn main() {
         return;
     };
 
-    // args.len() being >= 2 is guaranteed, so direct access is safe
+    // args.len() being >= 2 is guaranteed, so direct access is safe.
     match args[1].as_str() {
         "help" | "h" => help(),
         "version" | "v" => println!("configy {}", VERSION),
         "sync" | "s" => sync::init(false),
         "forcesync" | "fsync" | "fs" => sync::init(true),
-        sub_cmd @ _ => eprintln!(
+        sub_cmd => eprintln!(
             "{}[!] Not a valid subcommand: {}{}{}",
             colors::RED_FG,
             colors::WHITE_FG,
