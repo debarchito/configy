@@ -24,5 +24,5 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - uses: rui314/setup-mold@v2
+      - uses: rui314/setup-mold@v1
       - run: cargo build --release
