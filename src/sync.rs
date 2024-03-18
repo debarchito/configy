@@ -2,7 +2,7 @@
 
 use std::fs::{remove_dir_all, remove_file};
 use std::os::unix::fs::symlink as unix_symlink;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 mod parse;
 
 /// Initialize sync.
@@ -28,7 +28,7 @@ pub fn init(force: bool) {
 
 /// Symlink the src and dest.
 fn symlink(src: &Path, dest: &Path, force: bool) {
-  if clean(&PathBuf::from(dest), force) {
+  if clean(dest, force) {
     return;
   }
 
@@ -42,7 +42,7 @@ fn symlink(src: &Path, dest: &Path, force: bool) {
 }
 
 /// Cleans the destination path by removing the file or directory if it exists.
-fn clean(dest: &PathBuf, force: bool) -> bool {
+fn clean(dest: &Path, force: bool) -> bool {
   if !dest.exists() {
     return false;
   }

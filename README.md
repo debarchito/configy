@@ -1,6 +1,6 @@
 # configy
 
-A simple (zero-dependency) file and folder syncing (local) utility (created specially to manage my .files and configuration in general).
+A simple (zero-dependency) file and directory syncing (local) utility (created specially to manage my .files and configuration in general).
 
 ## Build
 
@@ -23,8 +23,8 @@ cargo build --release
 # The following examples are valid:
 
 ../relative/path/to/file.rs => ../relative-two/path-two/to/file.rs
-/absolute/path/to/folder => ../relative/path/to/folder
-/absolute/path/to/folder => /absolute-two/path-two/to/folder
+/absolute/path/to/directory => ../relative/path/to/directory
+/absolute/path/to/directory => /absolute-two/path-two/to/directory
 ../relative/path/to/file.rs => /absolute/path/to/file.rs
 
 # Rules:

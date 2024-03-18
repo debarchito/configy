@@ -26,7 +26,7 @@ fn help() {
   println!(
     "configy {VERSION}
 Debarchito Nath <dev.debarchito.nath@protonmail.com>
-A simple (zero-dependency) file and folder syncing (local) utility
+A simple (zero-dependency) file and directory syncing (local) utility
 
 USAGE:
     configy [SUBCOMMAND]

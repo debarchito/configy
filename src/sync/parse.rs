@@ -16,8 +16,8 @@ use std::io::{BufRead, BufReader};
 /// # The following examples are valid:
 ///
 /// ../relative/path/to/file.rs => ../relative-two/path-two/to/file.rs
-/// /absolute/path/to/folder => ../relative/path/to/folder
-/// /absolute/path/to/folder => /absolute-two/path-two/to/folder
+/// /absolute/path/to/directory => ../relative/path/to/directory
+/// /absolute/path/to/directory => /absolute-two/path-two/to/directory
 /// ../relative/path/to/file.rs => /absolute/path/to/file.rs
 ///
 /// # Rules:
