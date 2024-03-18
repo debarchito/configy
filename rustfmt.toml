@@ -1,0 +1,4 @@
+reorder_imports = true
+reorder_modules = true
+tab_spaces = 2
+max_width = 100

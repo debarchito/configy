@@ -1,10 +1,8 @@
-//! Parse `.configy`.
+//! Parse `.configy` files.
 
-use crate::colors::{RED_FG, RESET};
 use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::process::exit;
 
 /// Parse the contents from `.configy` and feeds it to a HashMap of HashSets.
 ///
@@ -35,69 +33,54 @@ use std::process::exit;
 /// # 6. Link are insensitive to leading and trailing white spaces.
 /// ```
 pub fn get_entries() -> HashMap<String, HashSet<String>> {
-    // Nothing to do if this fails. So just exit.
-    let configy = File::open(".configy").unwrap_or_else(|err| {
-        eprintln!(
-            "{}[!] Failed to read \".configy\"\n==> {}{}",
-            RED_FG, err, RESET,
-        );
-        exit(1);
-    });
-    let lines = BufReader::new(configy).lines();
-    let mut entries: HashMap<String, HashSet<String>> = HashMap::new();
+  let configy = match File::open(".configy") {
+    Ok(val) => val,
+    Err(err) => msg_exit!("<r>[!] Failed to read \".configy\"\n==></rs> {err}"),
+  };
+  let lines = BufReader::new(configy).lines();
+  let mut entries: HashMap<String, HashSet<String>> = HashMap::new();
 
-    for (i, line) in lines.enumerate() {
-        // Nothing to do if this fails. So just exit.
-        let line = line.unwrap_or_else(|err| {
-            eprintln!(
-                "{}[!] Failed while reading line no. {} in \".configy\"\n==> {}{}",
-                RED_FG,
-                i + 1,
-                err,
-                RESET,
-            );
-            exit(1);
-        });
-        let line = line.trim();
+  for (i, line) in lines.enumerate() {
+    let line = match line {
+      Ok(val) => val,
+      Err(err) => {
+        msg_exit!(
+          "<r>[!] Failed while reading line no. {} in \".configy\"\n==></rs> {}",
+          i + 1,
+          err
+        )
+      }
+    };
+    let line = line.trim();
 
-        // Ignore comments and empty lines.
-        if line.is_empty() || line.starts_with('#') {
-            continue;
-        }
-
-        // "=>" is reserved for to-from distinction and are disallowed for paths.
-        if line.matches("=>").count() != 1 {
-            eprintln!(
-                "{}[!] Only one \"=>\" is allowed per line and is reserved for to-from distinction.{}",
-                RED_FG,
-                RESET,
-            );
-            exit(1);
-        }
-
-        let contents = line.split("=>").collect::<Vec<&str>>();
-        // contents.len() being = 2 is guaranteed, so direct access is safe.
-        let (a, b) = (contents[0].trim(), contents[1].trim());
-
-        // Values must not be empty.
-        if a.is_empty() || b.is_empty() {
-            continue;
-        }
-
-        insert(&mut entries, a, b);
+    if line.is_empty() || line.starts_with('#') {
+      continue;
     }
 
-    entries
+    if line.matches("=>").count() != 1 {
+      msg_exit!(
+        "<r>[!] Only one \"=>\" is allowed per line and is reserved for to-from distinction.</rs>"
+      )
+    }
+
+    let contents = line.split("=>").collect::<Vec<&str>>();
+    let (a, b) = (contents[0].trim(), contents[1].trim());
+
+    if a.is_empty() || b.is_empty() {
+      continue;
+    }
+
+    insert(&mut entries, a, b);
+  }
+
+  entries
 }
 
 /// Inserts a value into a HashMap with HashSet values, allowing duplicates for each key.
 fn insert(entries: &mut HashMap<String, HashSet<String>>, key: &str, value: &str) {
-    let entry = entries.entry(key.into()).or_default();
-
-    entry.insert(value.into());
-
-    let value_count = entry.len();
-    let new_values = (2..value_count).map(|i| format!("value{}", i));
-
-    entry.extend(new_values);
+  let entry = entries.entry(key.into()).or_default();
+  entry.insert(value.into());
+  let value_count = entry.len();
+  let new_values = (2..value_count).map(|i| format!("value{}", i));
+  entry.extend(new_values);
 }
