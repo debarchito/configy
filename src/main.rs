@@ -26,7 +26,7 @@ fn help() {
   println!(
     "configy {VERSION}
 Debarchito Nath <dev.debarchito.nath@protonmail.com>
-A simple (zero-dependency) file and directory syncing (local) utility
+A simple (zero-dependency) file and directory syncing utility
 
 USAGE:
     configy [SUBCOMMAND]
@@ -38,3 +38,4 @@ SUBCOMMANDS:
     forcesync, fsync, fs    Read from \".configy\" and force sync it (overwrite allowed)"
   );
 }
+

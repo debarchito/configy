@@ -1,10 +1,10 @@
 # configy
 
-A simple (zero-dependency) file and directory syncing (local) utility (created specially to manage my .files and configuration in general).
+A simple (zero-dependency) file and directory syncing utility.
 
 ## Build
 
-Be sure to have [mold](https://github.com/rui314/mold) installed. If you don't want to use `mold`, just edit the configurations in `.cargo/config.toml` to use a linker of your choice. Once done, you can just run:
+Be sure to have [mold](https://github.com/rui314/mold) installed. If you don't want to use `mold`, edit the rustflags in `.cargo/config.toml` to use a linker of your choice. Once done, you can just run:
 
 ```bash
 cargo build --release
@@ -40,4 +40,4 @@ cargo build --release
 # 6. Link are insensitive to leading and trailing white spaces.
 ```
 
-3. After you have added all you desired links in `.configy`, just run `configy sync` and you are done! If the destination already exists, it will not overwrite it and issue info to console. If you want to overwrite, use `config forcesync` (or `fsync`).
+3. After you have added all you desired links in `.configy`, just run `configy sync`. If the destination already exists, it will not overwrite by default. If you want to overwrite, use `config forcesync` (or `fsync`).
