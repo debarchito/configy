@@ -4,7 +4,7 @@ A simple (zero-dependency) file and directory syncing utility.
 
 ## Build
 
-Be sure to have [mold](https://github.com/rui314/mold) installed. If you don't want to use `mold`, edit the rustflags in `.cargo/config.toml` to use a linker of your choice. Once done, you can just run:
+Be sure to have [mold](https://github.com/rui314/mold) installed. If you don't want to use `mold`, edit the rustflags in [.cargo/config.toml](/.cargo/config.toml) to use a linker of your choice. Once done, you can just run:
 
 ```bash
 cargo build --release
@@ -41,3 +41,7 @@ cargo build --release
 ```
 
 3. After you have added all you desired links in `.configy`, just run `configy sync`. If the destination already exists, it will not overwrite by default. If you want to overwrite, use `config forcesync` (or `fsync`).
+
+## License
+
+[MIT](/LICENSE)
