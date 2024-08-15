@@ -2,7 +2,7 @@
 
 A simple (zero-dependency) file and directory syncing utility.
 
-## Build (UNIX-like)
+## Build (Linux)
 
 This project uses the [mold](https://github.com/rui314/mold) linker. In case you don't want to use `mold`, edit the `rustflags` in [.cargo/config.toml](/.cargo/config.toml) to use a linker of your choice. To build, run:
 
