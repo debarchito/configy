@@ -37,7 +37,7 @@ use std::io::{BufRead, BufReader};
 pub fn get_entries() -> HashMap<String, HashSet<String>> {
   let configy = match File::open(".configy") {
     Ok(val) => val,
-    Err(err) => msg_exit!("<r>[!] Failed to read \".configy\"\n==></rs> {err}"),
+    Err(err) => msg_exit!("<r>[!] Failed to read \".configy\"\n==> <w>{err}</rs>"),
   };
   let lines = BufReader::new(configy).lines();
   let mut entries: HashMap<String, HashSet<String>> = HashMap::new();
@@ -47,7 +47,7 @@ pub fn get_entries() -> HashMap<String, HashSet<String>> {
       Ok(val) => val,
       Err(err) => {
         msg_exit!(
-          "<r>[!] Failed while reading line no. {} in \".configy\"\n==></rs> {}",
+          "<r>[!] Failed while reading line no. {} in \".configy\"\n==> <w>{}</rs>",
           i + 1,
           err
         )
@@ -61,7 +61,7 @@ pub fn get_entries() -> HashMap<String, HashSet<String>> {
 
     if line.matches("=>").count() != 1 {
       msg_exit!(
-        "<r>[!] Only one \"=>\" is allowed per line and is reserved for to-from distinction.</rs>"
+        "<r>[!] Only one \"=>\" is allowed per line and is reserved for src-dest distinction.</rs>"
       )
     }
 
@@ -69,7 +69,7 @@ pub fn get_entries() -> HashMap<String, HashSet<String>> {
     let (a, b) = (contents[0].trim(), contents[1].trim());
 
     if a.is_empty() || b.is_empty() {
-      msg!("<b>[?] Skipping invalid link:<w> {a} => {b}</rs>");
+      msg!("<b>[?] Skipping invalid link: <r>{a}<b> => <r>{b}</rs>");
       continue;
     }
 

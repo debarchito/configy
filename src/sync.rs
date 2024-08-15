@@ -15,10 +15,18 @@ pub fn init(force: bool) {
       let src = match resolve::resolve(&entry.0) {
         Ok(src) => src,
         Err(resolve::ResolveError::HomeDirError(err)) => {
-          msg_exit!("<r>[!] Failed to resolve home directory\n==> <w>{err}</rs>")
+          msg_exit!(
+            "<r>[!] Failed to resolve home directory for src: <w>{}\n<r>==> <w>{}</rs>",
+            &entry.0,
+            err
+          )
         }
         Err(resolve::ResolveError::CurrentDirError(err)) => {
-          msg_exit!("<r>[!] Failed to resolve current directory\n==> <w>{err}</rs>")
+          msg_exit!(
+            "<r>[!] Failed to resolve current directory for src: <w>{}\n<r>==> <w>{}</rs>",
+            &entry.0,
+            err
+          )
         }
       };
 
@@ -33,10 +41,18 @@ pub fn init(force: bool) {
       let dest = match resolve::resolve(&value) {
         Ok(src) => src,
         Err(resolve::ResolveError::HomeDirError(err)) => {
-          msg_exit!("<r>[!] Failed to resolve home directory\n==> <w>{err}</rs>")
+          msg_exit!(
+            "<r>[!] Failed to resolve home directory for dest: <w>{}\n<r>==> <w>{}</rs>",
+            &entry.0,
+            err
+          )
         }
         Err(resolve::ResolveError::CurrentDirError(err)) => {
-          msg_exit!("<r>[!] Failed to resolve current directory\n==> <w>{err}</rs>")
+          msg_exit!(
+            "<r>[!] Failed to resolve current directory for dest: <w>{}\n<r>==> <w>{}</rs>",
+            &entry.0,
+            err
+          )
         }
       };
 
@@ -54,7 +70,7 @@ fn symlink(src: PathBuf, dest: PathBuf, force: bool) {
   match unix_symlink(&src, &dest) {
     Ok(_) => msg!("<g>[+] Created symbolic link successfully: <w>{src:?}<g> <==> <w>{dest:?}</rs>"),
     Err(err) => msg_exit!(
-      "<r>[!] Failed to create symbolic link: <w>{src:?}<r> <==> <w>{dest:?}\n==></rs> {err}"
+      "<r>[!] Failed to create symbolic link: <w>{src:?}<r> <==> <w>{dest:?}\n<r>==> <w>{err}</rs>"
     ),
   };
 }
@@ -69,7 +85,7 @@ fn clean_if_forced(dest: &PathBuf, force: bool) -> bool {
 
   // If the destination exists but force is false, obstruct the control flow and print the message.
   if !force {
-    msg!("<b>[?] The following path already exists: <w>{dest:?}\n<b>==> Use \"forcesync\" instead of \"sync\" to overwrite</rs>");
+    msg!("<b>[?] The following path already exists: <w>{dest:?}\n<b>==> Use \"forcesync\" instead of \"sync\" to overwrite.</rs>");
     return true;
   }
 
@@ -77,13 +93,13 @@ fn clean_if_forced(dest: &PathBuf, force: bool) -> bool {
     match remove_file(dest) {
       // Delete the file and do not obstruct the control flow.
       Ok(_) => return false,
-      Err(err) => msg_exit!("<r>[!] Failed to remove file: <w>{dest:?}\n<r>==> {err}</rs>"),
+      Err(err) => msg_exit!("<r>[!] Failed to remove file: <w>{dest:?}\n<r>==> <w>{err}</rs>"),
     }
   }
 
   match remove_dir_all(dest) {
     // Delete the directory and everything inside it. Do not obstruct the control flow.
     Ok(_) => false,
-    Err(err) => msg_exit!("<r>[!] Failed to remove directory: <w>{dest:?}\n<r>==> {err}</rs>"),
+    Err(err) => msg_exit!("<r>[!] Failed to remove directory: <w>{dest:?}\n<r>==> <w>{err}</rs>"),
   }
 }
