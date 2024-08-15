@@ -38,4 +38,3 @@ SUBCOMMANDS:
     forcesync, fsync, fs    Read from \".configy\" and force sync it (overwrite allowed)"
   );
 }
-
