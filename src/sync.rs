@@ -12,23 +12,7 @@ pub fn init(force: bool) {
 
   for entry in entries {
     for value in entry.1 {
-      let src = match resolve::resolve(&entry.0) {
-        Ok(src) => src,
-        Err(resolve::ResolveError::HomeDirError(err)) => {
-          msg_exit!(
-            "<r>[!] Failed to resolve home directory for src: <w>{}\n<r>==> <w>{}</rs>",
-            &entry.0,
-            err
-          )
-        }
-        Err(resolve::ResolveError::CurrentDirError(err)) => {
-          msg_exit!(
-            "<r>[!] Failed to resolve current directory for src: <w>{}\n<r>==> <w>{}</rs>",
-            &entry.0,
-            err
-          )
-        }
-      };
+      let src = resolve::resolve(&entry.0);
 
       if !src.exists() {
         msg!(
@@ -38,25 +22,7 @@ pub fn init(force: bool) {
         continue;
       }
 
-      let dest = match resolve::resolve(&value) {
-        Ok(src) => src,
-        Err(resolve::ResolveError::HomeDirError(err)) => {
-          msg_exit!(
-            "<r>[!] Failed to resolve home directory for dest: <w>{}\n<r>==> <w>{}</rs>",
-            &entry.0,
-            err
-          )
-        }
-        Err(resolve::ResolveError::CurrentDirError(err)) => {
-          msg_exit!(
-            "<r>[!] Failed to resolve current directory for dest: <w>{}\n<r>==> <w>{}</rs>",
-            &entry.0,
-            err
-          )
-        }
-      };
-
-      symlink(src, dest, force);
+      symlink(src, resolve::resolve(&value), force);
     }
   }
 }

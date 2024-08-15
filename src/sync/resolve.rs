@@ -1,32 +1,22 @@
 //! Path resolution.
 
 use std::env;
-use std::fmt;
-use std::io;
 use std::path::PathBuf;
 
-#[derive(Debug)]
-/// Possible errors returned during path resolution.
-pub enum ResolveError {
-  HomeDirError(env::VarError),
-  CurrentDirError(io::Error),
-}
-
-impl fmt::Display for ResolveError {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    write!(f, "{:?}", self)
-  }
-}
-
-impl std::error::Error for ResolveError {}
-
 /// Resolve relative path (as string) to absolute path.
-pub fn resolve(path: &str) -> Result<PathBuf, ResolveError> {
-  let home_dir = env::var("HOME").map_err(ResolveError::HomeDirError)?;
-  let path = path.trim().trim_end_matches('/');
+pub fn resolve(path: &str) -> PathBuf {
+  let home_dir = match env::var("HOME") {
+    Ok(home_dir) => home_dir,
+    Err(err) => msg_exit!(
+      "<r>[!] Failed to resolve home directory for path: <w>{}\n<r>==> <w>{}</rs>",
+      path,
+      err
+    ),
+  };
+  let path = path.trim_end_matches('/');
 
   if path == "~" {
-    return Ok(PathBuf::from(home_dir));
+    return PathBuf::from(home_dir);
   }
 
   let path_buf = if path.starts_with('~') {
@@ -37,9 +27,16 @@ pub fn resolve(path: &str) -> Result<PathBuf, ResolveError> {
   };
 
   if path_buf.is_absolute() {
-    Ok(path_buf)
+    path_buf
   } else {
-    let current_dir = env::current_dir().map_err(ResolveError::CurrentDirError)?;
-    Ok(current_dir.join(path_buf))
+    let current_dir = match env::current_dir() {
+      Ok(current_dir) => current_dir,
+      Err(err) => msg_exit!(
+        "<r>[!] Failed to resolve current directory for path: <w>{}\n<r>==> <w>{}</rs>",
+        path,
+        err
+      ),
+    };
+    current_dir.join(path_buf)
   }
 }
