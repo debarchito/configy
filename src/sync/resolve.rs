@@ -1,3 +1,5 @@
+//! Path resolution.
+
 use std::env;
 use std::fmt;
 use std::io;

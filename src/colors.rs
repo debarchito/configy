@@ -2,7 +2,7 @@
 
 //! `ANSI` color escape code(s) and macro(s) to make colored messages easy to write. <br>
 //! `NOTE:` This is known to not work in `Windows Command Prompt`.
-//! Users are advised to make use of `Ansicon` (https://github.com/adoxa/ansicon).
+//! Users are advised to make use of [Ansicon](https://github.com/adoxa/ansicon).
 
 #[macro_export]
 /// A helper macro to make colored messages easy to write.
