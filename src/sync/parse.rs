@@ -9,23 +9,25 @@ use std::io::{BufRead, BufReader};
 /// # Example
 ///
 /// ```bash
-/// # Syntax:
-/// # <link-from> => <link-to>
+/// #> Syntax:
+///
+/// # <src> => <dest>
 /// # Altogether its called a link.
 ///
-/// # The following examples are valid:
+/// #> Valid Examples:
 ///
 /// ../relative/path/to/file.rs => ../relative-two/path-two/to/file.rs
 /// /absolute/path/to/directory => ../relative/path/to/directory
 /// /absolute/path/to/directory => /absolute-two/path-two/to/directory
 /// ../relative/path/to/file.rs => /absolute/path/to/file.rs
 ///
-/// # Rules:
+/// #> Properties:
+///
 /// # 1. Only one "=>" is allowed per line.
-/// # 2. Comments MUST start from the beginning of a line. This example is invalid:
+/// # 2. Comments MUST start from the beginning of a new line. This example is invalid:
 /// ../a/b/c => /d/e/f # The parser will try to parse it as a valid link not a comment.
 /// # 3. Empty lines are ignored just like comments.
-/// # 4. "link-from" and "link-to" can't be empty. These examples are invalid:
+/// # 4. `src` and `dest` can't be empty. These examples are invalid:
 /// /a/b/c =>
 /// => ../d/e/f
 /// =>
