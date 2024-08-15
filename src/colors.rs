@@ -15,7 +15,11 @@ macro_rules! msg {
       .replace("<b>", "\x1b[34m")    // Blue
       .replace("<w>", "\x1b[37m")    // White
       .replace("</rs>", "\x1b[0m");  // Reset
-    eprintln!("{}", msg);
+
+    match msg.contains("\x1b[31m") {
+      true => eprintln!("{msg}"),
+      _ => println!("{msg}"),
+    }
   }};
 }
 
