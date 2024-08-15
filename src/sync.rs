@@ -15,7 +15,7 @@ pub fn init(force: bool) {
 
       if !src.exists() {
         msg!(
-          "<b>[?] The following path doesn't exist: <w>{}</rs>",
+          "<b>[?] Skipping because the following src doesn't exist: <w>{}</rs>",
           entry.0
         );
         continue;

@@ -67,6 +67,7 @@ pub fn get_entries() -> HashMap<String, HashSet<String>> {
     let (a, b) = (contents[0].trim(), contents[1].trim());
 
     if a.is_empty() || b.is_empty() {
+      msg!("<b>[?] Skipping invalid link:<w> {a} => {b}</rs>");
       continue;
     }
 
