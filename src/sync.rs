@@ -3,7 +3,7 @@
 use std::fs::{remove_dir_all, remove_file};
 use std::os::unix::fs::symlink as unix_symlink;
 use std::path::PathBuf;
-mod parse;
+pub mod parse;
 mod resolve;
 
 /// Initialize sync.

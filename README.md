@@ -44,6 +44,8 @@ cargo build --release
 
 3. After you have added all you desired links in `.configy`, just run `configy sync` (or just `s`) to create the symlinks. If the destination already exists, it will not overwrite by default. To overwrite, use `config forcesync` (or `fsync`, `fs`).
 
+4. Use `configy list` (or just `l`) to list all the links in `.configy`.
+
 ## Example usage
 
 I manage my [.dotfiles](https://github.com/debarchito/.dotfiles) using `configy`.

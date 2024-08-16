@@ -1,6 +1,7 @@
 use std::env::args;
 pub mod colors;
-mod sync;
+mod list;
+pub mod sync;
 
 const VERSION: &str = "0.1.0";
 
@@ -17,6 +18,7 @@ fn main() {
     "version" | "v" => println!("configy {}", VERSION),
     "sync" | "s" => sync::init(false),
     "forcesync" | "fsync" | "fs" => sync::init(true),
+    "list" | "l" => list::list_links(),
     sub_cmd => msg!("<r>[!] Not a valid subcommand: <w>{sub_cmd}</rs>"),
   }
 }
@@ -35,6 +37,7 @@ SUBCOMMANDS:
     help, h                 Print this message
     version, v              Version info
     sync, s                 Read from \".configy\" and sync
-    forcesync, fsync, fs    Read from \".configy\" and force sync it (overwrite allowed)"
+    forcesync, fsync, fs    Read from \".configy\" and force sync it (overwrite allowed)
+    list, l                 List all links available in \".configy\""
   );
 }
