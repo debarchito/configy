@@ -10,6 +10,8 @@ mod resolve;
 pub fn init(force: bool) {
   let entries = parse::get_entries();
 
+  msg!("<b>[?] configy currently doesn't address broken symbolic links.\n==> Manual intervention is required to address said errors.</rs>");
+
   for entry in entries {
     for value in entry.1 {
       let src = resolve::resolve(&entry.0);
